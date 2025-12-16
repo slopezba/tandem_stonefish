@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<robot name="girona1000" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:arg name="robot_namespace" default="girona500" />
+  <xacro:arg name="bravo_namespace" default="$(arg robot_namespace)/bravo" />
+
+  <!-- Include Girona500 -->
+  <xacro:include filename="$(find girona500_description)/urdf/girona500_intervention.urdf.xacro" />
+
+  <!-- Stereo >
+  <link name="$(arg robot_namespace)/xiroi/stereo_ch3/left_optical" />
+  <joint name="$(arg robot_namespace)_origin_to_stereo_left_optical" type="fixed">
+    <parent link="$(arg robot_namespace)/base_link" />
+    <child link="$(arg robot_namespace)/xiroi/stereo_ch3/left_optical" />
+    <origin rpy="0 0 ${pi/2}" xyz="0.2 -0.048 0.76" />
+  </joint>
+
+  <link name="$(arg robot_namespace)/xiroi/stereo_ch3/right_optical" />
+  <joint name="$(arg robot_namespace)_origin_to_stereo_right_optical" type="fixed">
+    <parent link="$(arg robot_namespace)/base_link" />
+    <child link="$(arg robot_namespace)/xiroi/stereo_ch3/right_optical" />
+    <origin rpy="0 0 ${pi/2}" xyz="0.2 0.048 0.76" />
+  </joint-->
+
+  <!-- Include manipulators -->
+  <xacro:include
+    filename="$(find blueprintlab_reachbravo7_manipulator_description)/urdf/bravo7_macro.urdf.xacro" />
+  <!-- Include end-effectors -->
+  <xacro:include
+    filename="$(find blueprintlab_reachbravo7_manipulator_description)/urdf/end_effectors/jaws_macro.urdf.xacro" />
+
+
+  <!-- Add manipulators-->
+  <!-- <xacro:reach_bravo7 prefix="$(arg bravo_namespace)" /> -->
+  <xacro:reach_bravo7 prefix="$(arg bravo_namespace)" link6_lowlimit="-3.14" link6_uplimit="3.14"/>
+
+
+  <!-- Attach manipulator to base -->
+  <joint name="girona1000_to_bravo" type="fixed">
+    <parent link="$(arg robot_namespace)/base_link" />
+    <child link="$(arg bravo_namespace)/base_link" />
+    <origin rpy="${pi} 0.0 0.0" xyz="0.555 0.0 0.39" />
+  </joint>
+
+  <xacro:reach_bravo7_jaws prefix="$(arg bravo_namespace)" />
+ 
+  <!-- Camera -->
+  <link name="$(arg robot_namespace)/camera_front" />
+  <joint name="$(arg robot_namespace)_base_link_to_camera_front" type="fixed">
+    <parent link="$(arg robot_namespace)/base_link" />
+    <child link="$(arg robot_namespace)/camera_front" />
+    <origin rpy="1.57 0.0 1.57" xyz="0.57 0.0 0.2" />
+  </joint>
+  
+  <!-- Camera poster -->
+  <link name="$(arg robot_namespace)/camera_poster" />
+  <joint name="$(arg robot_namespace)_base_link_to_camera_poster" type="fixed">
+    <parent link="$(arg robot_namespace)/base_link" />
+    <child link="$(arg robot_namespace)/camera_poster" />
+    <origin rpy="0.0 0.0 1.57" xyz="0.2 0.0 0.55" />
+  </joint>
+  
+  <!-- Camera gripper-->
+  <link name="$(arg bravo_namespace)/gripper/camera"/> 
+  <joint name="$(arg robot_namespace)_bravo_to_camera_gripper" type="fixed">
+    <parent link="$(arg bravo_namespace)/jaws_base_link" />
+    <child link="$(arg bravo_namespace)/gripper/camera" />
+    <origin rpy="0.0 0.0 -1.57" xyz="0.0 0.0 0.15" />
+  </joint>
+
+  <!-- Camera Zed-->
+  <link name="$(arg robot_namespace)/zed_camera_link"/> 
+  <joint name="$(arg robot_namespace)_girona_to_zed" type="fixed">
+    <parent link="$(arg robot_namespace)/base_link" />
+    <child link="$(arg robot_namespace)/zed_camera_link" />
+    <origin rpy="${pi/4} 0.0 ${pi/2}" xyz="0.2 -0.0315 0.76" />
+  </joint>
+
+  <!-- Camera Zed-->
+  <link name="$(arg robot_namespace)/zed_camera_link1"/> 
+  <joint name="$(arg robot_namespace)_girona_to_zed_depth" type="fixed">
+    <parent link="$(arg robot_namespace)/base_link" />
+    <child link="$(arg robot_namespace)/zed_camera_link1" />
+    <origin rpy="${pi/4} 0.0 ${pi/2}" xyz="0.2 -0.0315 0.76" />
+  </joint>
+
+</robot>

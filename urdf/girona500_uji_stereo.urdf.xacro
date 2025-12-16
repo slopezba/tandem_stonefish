@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<robot name="girona1000" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:arg name="robot_namespace" default="girona500" />
+
+  <!-- Include Girona500 -->
+  <xacro:include filename="$(find girona500_description)/urdf/core.urdf.xacro" />
+
+  <!-- Stereo -->
+  <link name="$(arg robot_namespace)/xiroi/stereo_ch3/left_optical" />
+  <joint name="$(arg robot_namespace)_origin_to_stereo_left_optical" type="fixed">
+    <parent link="$(arg robot_namespace)/base_link" />
+    <child link="$(arg robot_namespace)/xiroi/stereo_ch3/left_optical" />
+    <origin rpy="0 0 ${pi/2}" xyz="0.2 -0.048 0.76" />
+  </joint>
+
+  <link name="$(arg robot_namespace)/xiroi/stereo_ch3/right_optical" />
+  <joint name="$(arg robot_namespace)_origin_to_stereo_right_optical" type="fixed">
+    <parent link="$(arg robot_namespace)/base_link" />
+    <child link="$(arg robot_namespace)/xiroi/stereo_ch3/right_optical" />
+    <origin rpy="0 0 ${pi/2}" xyz="0.2 0.048 0.76" />
+  </joint>
+
+
+  <!-- Camera -->
+  <link name="$(arg robot_namespace)/camera_front" />
+  <joint name="$(arg robot_namespace)_base_link_to_camera_front" type="fixed">
+    <parent link="$(arg robot_namespace)/base_link" />
+    <child link="$(arg robot_namespace)/camera_front" />
+    <origin rpy="1.57 0.0 1.2" xyz="0.38 0.1 -0.06" />
+  </joint>
+
+
+</robot>

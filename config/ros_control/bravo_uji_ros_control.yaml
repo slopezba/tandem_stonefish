@@ -1,0 +1,79 @@
+# Publish all joint states -----------------------------------
+joint_state_controller:
+  type: joint_state_controller/JointStateController
+  publish_rate: 50
+
+# Gripper Controllers ---------------------------------------
+gripper_position_controller_finger_small:
+    type: velocity_controllers/JointPositionController
+    joint: girona500/bravo/finger_small_joint
+    pid:
+      p: 1.0
+      i: 0.0
+      d: 0.0
+
+gripper_position_controller_finger_large:
+    type: velocity_controllers/JointPositionController
+    joint: girona500/bravo/finger_large_joint
+    pid:
+      p: 1.0
+      i: 0.0
+      d: 0.0
+
+gripper_velocity_controller_finger_small:
+  type: velocity_controllers/JointVelocityController
+  joint: girona500/bravo/finger_small_joint
+
+gripper_velocity_controller_finger_large:
+  type: velocity_controllers/JointVelocityController
+  joint: girona500/bravo/finger_large_joint
+
+  
+# Joint Controller -----------------------------------------
+joint_teleop_velocity_controller:
+  type: velocity_controllers/JointGroupVelocityController
+  joints:
+    - girona500/bravo/joint1
+    - girona500/bravo/joint2
+    - girona500/bravo/joint3
+    - girona500/bravo/joint4
+    - girona500/bravo/joint5
+    - girona500/bravo/joint6
+
+joint_velocity_controller:
+  type: velocity_controllers/JointGroupVelocityController
+  joints:
+    - girona500/bravo/joint1
+    - girona500/bravo/joint2
+    - girona500/bravo/joint3
+    - girona500/bravo/joint4
+    - girona500/bravo/joint5
+    - girona500/bravo/joint6
+
+
+joint_trajectory_controller:
+  type: velocity_controllers/JointTrajectoryController
+  joints:
+    - girona500/bravo/joint1
+    - girona500/bravo/joint2
+    - girona500/bravo/joint3
+    - girona500/bravo/joint4
+    - girona500/bravo/joint5
+    - girona500/bravo/joint6
+  gains:
+    girona500/bravo/joint1: { p: 5.0, i: 0.0, d: 0.0, i_clamp_min: -1, i_clamp_max: 1 }
+    girona500/bravo/joint2: { p: 5.0, i: 0.0, d: 0.0, i_clamp_min: -1, i_clamp_max: 1 }
+    girona500/bravo/joint3: { p: 5.0, i: 0.0, d: 0.0, i_clamp_min: -1, i_clamp_max: 1 }
+    girona500/bravo/joint4: { p: 5.0, i: 0.0, d: 0.0, i_clamp_min: -1, i_clamp_max: 1 }
+    girona500/bravo/joint5: { p: 5.0, i: 0.0, d: 0.2, i_clamp_min: -1, i_clamp_max: 1 }
+    girona500/bravo/joint6: { p: 5.0, i: 0.0, d: 0.2, i_clamp_min: -1, i_clamp_max: 1 }
+
+  constraints:
+    goal_time: 0.5                   
+    stopped_velocity_tolerance: 0.001 
+    girona500/bravo/joint1: { trajectory: 0.05, goal: 0.05 }
+    girona500/bravo/joint2: { trajectory: 0.05, goal: 0.05 }
+    girona500/bravo/joint3: { trajectory: 0.05, goal: 0.05 }
+    girona500/bravo/joint4: { trajectory: 0.05, goal: 0.05 }      
+    girona500/bravo/joint5: { trajectory: 0.05, goal: 0.05 }
+    girona500/bravo/joint6: { trajectory: 0.05, goal: 0.05 }

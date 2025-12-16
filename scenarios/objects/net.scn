@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<scenario>
+	<looks>
+		<look name="black" gray="0.01" roughness="0.3" metalness="0.2" />
+	</looks>
+
+	<static name="$(arg name)" type="model">
+		<physical>
+			<mesh filename="$(find tandem_stonefish)/resources/objects/net/net_fishfarm_holes.obj"
+					scale="1.0" />
+			<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+		</physical>
+		<visual>
+			<mesh filename="$(find tandem_stonefish)/resources/objects/net/net_fishfarm_holes.obj"
+					scale="1.0" />
+			<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+		</visual>
+		<material name="Fiberglass" />
+		<look name="black" />
+		<world_transform xyz="$(arg xyz)" rpy="$(arg rpy)"/>
+	</static>
+	
+</scenario>
