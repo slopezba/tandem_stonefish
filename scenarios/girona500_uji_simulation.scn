@@ -41,13 +41,13 @@
 		</friction_table>
 	</materials>
 
-	<include file="$(find tandem_stonefish)/scenarios/environments/cirtesu.scn" />
+	<include file="$(find tandem_stonefish)/scenarios/environments/cirtesu_aruco.scn" />
 	
 
 	<include file="$(find tandem_stonefish)/scenarios/objects/net.scn">
 		<arg name="name" value="net" />
-		<arg name="xyz" value="-6.0 3.0 0.0" />
-		<arg name="rpy" value="1.57 0.0 0.0" />
+		<arg name="xyz" value="-6.0 -3.6 0.0" />
+		<arg name="rpy" value="0.0 0.0 0.0" />
 	</include>
 
 	<include file="$(find tandem_stonefish)/scenarios/robots/girona500_uji_bravo_real_cameras.scn">

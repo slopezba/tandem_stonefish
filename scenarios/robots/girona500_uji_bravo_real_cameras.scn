@@ -399,22 +399,47 @@
 			<look name="rb7_black" />
 		</link>
 
-		<link name="patch" type="model" physics="submerged">
-			<physical>
-				<mesh
-					filename="$(find tandem_stonefish)/resources/objects/patch/gripper_patch.obj"
-					scale="1.0" />
-				<origin rpy="1.57 0.0 0.0" xyz="-0.0 -0.0 -0.0" />
-			</physical>
-			<visual>
-				<mesh
-					filename="$(find tandem_stonefish)/resources/objects/patch/gripper_patch.obj"
-					scale="1.0" />
-				<origin rpy="1.57 0.0 0.0" xyz="-0.0 -0.0 -0.0" />
-			</visual>
-			<material name="Neutral" />
-			<look name="rb7_black" />
+		<link name="patch" type="compound" physics="submerged">
+			<external_part name="patch_frame" type="model" physics="submerged"
+				buoyant="true">
+				<physical>
+					<mesh
+						filename="$(find tandem_stonefish)/resources/objects/patch/gripper_patch1_phy.obj"
+						scale="1.0" />
+					<origin rpy="0.0 0.0 0.0" xyz="-0.0 -0.0 -0.0" />
+				</physical>
+				<visual>
+					<mesh
+						filename="$(find tandem_stonefish)/resources/objects/patch/gripper_patch.obj"
+						scale="1.0" />
+					<origin rpy="1.57 0.0 0.0" xyz="-0.0 -0.0 -0.0" />
+				</visual>
+				<material name="Neutral" />
+				<look name="rb7_black" />
+				<compound_transform rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0" />
+			</external_part>
+
+			<external_part name="patch_net" type="model" physics="submerged"
+				buoyant="true">
+				<physical>
+					<mesh
+						filename="$(find tandem_stonefish)/resources/objects/patch/patch_net.obj"
+						scale="1.0" />
+					<origin rpy="0 0 0" xyz="0.0 0.0 0.0" />
+				</physical>
+				<visual>
+					<mesh
+						filename="$(find tandem_stonefish)/resources/objects/patch/patch_net_vis.obj"
+						scale="1.0" />
+					<origin rpy="0 0 0" xyz="0.0 0.0 0.0" />
+				</visual>
+				<material name="Neutral" />
+				<look name="Yellow" />
+				<compound_transform rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0" />
+			</external_part>
 		</link>
+
+
 
 		<link name="gripper_right_finger" type="model" physics="submerged">
 			<physical>
@@ -564,35 +589,49 @@
 			<ros_publisher topic="/$(arg robot_name)/navigator/imu" />
 		</sensor>
 		
-
 		<sensor
-			name="front_camera/camera" type="camera" rate="10.0">
-			<link name="Vehicle" />
-			<origin rpy="1.57 0.0 1.57" xyz="0.35 -0.06 0.11" />
-			<specs resolution_x="800" resolution_y="600" horizontal_fov="65.0" />
-			<ros_publisher topic="/$(arg robot_name)/front_camera/camera" />
-		</sensor>
-		
-		<sensor
-			name="camera_poster" type="camera" rate="10.0">
+			name="down_camera/camera" type="camera" rate="10.0">
 			<link name="Vehicle" />
 			<origin rpy="0.0 0.0 1.57" xyz="0.2 0.0 0.55" />
-			<specs resolution_x="800" resolution_y="600" horizontal_fov="120.0" />
-			<ros_publisher topic="/$(arg robot_name)/camera_poster" />
+			<specs resolution_x="1920" resolution_y="1080" horizontal_fov="82.0" />
+			<ros_publisher topic="/$(arg robot_name)/down_camera/camera" />
 		</sensor>
 		
 		<sensor
 			name="bravo/gripper/camera" type="camera" rate="10.0">
 			<link name="RB7JawsBase" />
 			<origin rpy="0.0 0.0 3.1416" xyz="0.0 0.0 0.24" />
-			<specs resolution_x="2028" resolution_y="1520" horizontal_fov="120.0" />
+			<specs resolution_x="2028" resolution_y="1520" horizontal_fov="60.0" />
 			<ros_publisher topic="/$(arg robot_name)/bravo/gripper/camera" />
 		</sensor>
 
+		<sensor
+			name="front_camera/camera" type="camera" rate="10.0">
+			<link name="Vehicle" />
+			<origin rpy="1.57 0.0 1.57" xyz="0.35 -0.06 0.11" />
+			<specs resolution_x="1920" resolution_y="1080" horizontal_fov="82.0" />
+			<ros_publisher topic="/$(arg robot_name)/front_camera/camera" />
+		</sensor>
+
 		<sensor 
+			name="right_camera/camera" type="camera" rate="10.0">
+			<link name="Vehicle" />
+			<origin rpy="${pi/2} 0.0 ${pi}" xyz="0.45 0.0 0.15" />
+			<specs resolution_x="1920" resolution_y="1080" horizontal_fov="82" />
+			<ros_publisher topic="/$(arg robot_name)/right_camera/camera" />
+		</sensor>
+		<sensor 
+			name="left_camera/camera" type="camera" rate="10.0">
+			<link name="Vehicle" />
+			<origin rpy="${pi/2} 0.0 0.0" xyz="0.45 0.0 0.15" />
+			<specs resolution_x="1920" resolution_y="1080" horizontal_fov="82" />
+			<ros_publisher topic="/$(arg robot_name)/left_camera/camera" />
+		</sensor>
+
+		<!-- <sensor 
 			name="zed_camera_link1" type="camera" rate="10.0">
 			<link name="Vehicle" />
-			<origin rpy="${pi/2} 0.0 0.0" xyz="0.45 0.0 0.19" />
+			<origin rpy="${pi/2} 0.0 0.0" xyz="0.45 0.0 0.15" />
 			<specs resolution_x="1920" resolution_y="1080" horizontal_fov="102" />
 			<ros_publisher topic="/$(arg robot_name)/zed/zed_node/rgb_camera" />
 		</sensor>
@@ -600,11 +639,11 @@
 		<sensor 
 			name="zed_camera_link" type="depthcamera" rate="10.0">
 			<link name="Vehicle" />
-			<origin rpy="${pi/2} 0.0 0.0" xyz="0.45 0.0 0.19" />
+			<origin rpy="${pi/2} 0.0 0.0" xyz="0.45 0.0 0.15" />
 			<specs resolution_x="1920" resolution_y="1080" horizontal_fov="102" depth_min="0.2" depth_max="10.0"/>
             <noise depth="0.02"/>
 			<ros_publisher topic="/$(arg robot_name)/zed/zed_node/depth_camera" />
-		</sensor>
+		</sensor> -->
 
 		<!-- Thrusters -->
 		<actuator name="ThrusterSurgePort" type="thruster">

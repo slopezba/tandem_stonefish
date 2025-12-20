@@ -6,10 +6,9 @@ Panels:
       Expanded:
         - /Ground Truth1/Shape1
         - /TF1/Frames1
-        - /DepthCloud1
         - /DepthCloud1/Auto Size1
       Splitter Ratio: 0.4642857015132904
-    Tree Height: 544
+    Tree Height: 354
   - Class: rviz/Views
     Expanded:
       - /Current View1
@@ -110,16 +109,6 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        girona500/bravo/finger_large_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        girona500/bravo/finger_small_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         girona500/bravo/gripper:
           Alpha: 1
           Show Axes: false
@@ -128,7 +117,12 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        girona500/bravo/jaws_base_link:
+        girona500/bravo/gripper_base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        girona500/bravo/left_finger_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -167,7 +161,12 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        girona500/camera_poster:
+        girona500/bravo/right_finger_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        girona500/down_camera/camera:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -195,12 +194,20 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+        girona500/left_camera/camera:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         girona500/payload:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
         girona500/pressure:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        girona500/right_camera/camera:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -221,14 +228,6 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
         girona500/thruster_4:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        girona500/zed_camera_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        girona500/zed_camera_link1:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -268,30 +267,26 @@ Visualization Manager:
           Value: false
         girona500/bravo/base_link:
           Value: false
-        girona500/bravo/finger_large_link:
-          Value: false
-        girona500/bravo/finger_small_link:
-          Value: false
         girona500/bravo/gripper:
           Value: false
         girona500/bravo/gripper/camera:
           Value: true
-        girona500/bravo/jaws_base_link:
-          Value: false
+        girona500/bravo/gripper_base_link:
+          Value: true
         girona500/bravo/link1:
-          Value: false
+          Value: true
         girona500/bravo/link2:
-          Value: false
+          Value: true
         girona500/bravo/link3:
-          Value: false
+          Value: true
         girona500/bravo/link4:
-          Value: false
+          Value: true
         girona500/bravo/link5:
-          Value: false
+          Value: true
         girona500/bravo/link6:
           Value: false
-        girona500/camera_poster:
-          Value: false
+        girona500/down_camera/camera:
+          Value: true
         girona500/dvl:
           Value: false
         girona500/dvl_altitude:
@@ -304,10 +299,14 @@ Visualization Manager:
           Value: false
         girona500/imu_filter:
           Value: false
+        girona500/left_camera/camera:
+          Value: true
         girona500/payload:
           Value: false
         girona500/pressure:
           Value: false
+        girona500/right_camera/camera:
+          Value: true
         girona500/thruster_0:
           Value: false
         girona500/thruster_1:
@@ -317,10 +316,6 @@ Visualization Manager:
         girona500/thruster_3:
           Value: false
         girona500/thruster_4:
-          Value: false
-        girona500/zed_camera_link:
-          Value: true
-        girona500/zed_camera_link1:
           Value: false
         girona500/zedm/base_link:
           Value: false
@@ -355,13 +350,9 @@ Visualization Manager:
                             girona500/bravo/gripper:
                               {}
                             girona500/bravo/gripper/camera:
-                              {}
-                            girona500/bravo/jaws_base_link:
-                              girona500/bravo/finger_large_link:
+                              girona500/bravo/gripper_base_link:
                                 {}
-                              girona500/bravo/finger_small_link:
-                                {}
-              girona500/camera_poster:
+              girona500/down_camera/camera:
                 {}
               girona500/dvl:
                 girona500/dvl_altitude:
@@ -374,9 +365,13 @@ Visualization Manager:
                 {}
               girona500/imu_filter:
                 {}
+              girona500/left_camera/camera:
+                {}
               girona500/payload:
                 {}
               girona500/pressure:
+                {}
+              girona500/right_camera/camera:
                 {}
               girona500/thruster_0:
                 {}
@@ -388,47 +383,12 @@ Visualization Manager:
                 {}
               girona500/thruster_4:
                 {}
-              girona500/zed_camera_link:
-                {}
-              girona500/zed_camera_link1:
-                {}
               girona500/zedm/base_link:
                 {}
       Update Interval: 0
       Value: true
     - Class: rviz/Camera
-      Enabled: false
-      Image Rendering: background and overlay
-      Image Topic: /girona500/camera_poster/image_color
-      Name: Camera_poster
-      Overlay Alpha: 0.5
-      Queue Size: 2
-      Transport Hint: raw
-      Unreliable: false
-      Value: false
-      Visibility:
-        Camera_front: true
-        Camera_gripper: true
-        CirtesuModel: true
-        Coupler_Marker: true
-        DepthCloud: true
-        Grid: true
-        Ground Truth: true
-        MarkerArray: true
-        Path: true
-        Pipe_Marker: true
-        RobotModel: true
-        TF: true
-        Value: true
-        World origin: true
-        Zed_Camera: true
-        altitude: true
-        object_pose: true
-        perception_image: true
-        tp_ee_pose: true
-      Zoom Factor: 1
-    - Class: rviz/Camera
-      Enabled: false
+      Enabled: true
       Image Rendering: background and overlay
       Image Topic: /girona500/front_camera/camera/image_color
       Name: Camera_front
@@ -436,10 +396,12 @@ Visualization Manager:
       Queue Size: 2
       Transport Hint: raw
       Unreliable: false
-      Value: false
+      Value: true
       Visibility:
+        Camera_down: true
         Camera_gripper: true
-        Camera_poster: true
+        Camera_left: true
+        Camera_right: true
         CirtesuModel: true
         Coupler_Marker: true
         DepthCloud: true
@@ -469,8 +431,109 @@ Visualization Manager:
       Unreliable: false
       Value: true
       Visibility:
+        Camera_down: true
         Camera_front: true
-        Camera_poster: true
+        Camera_left: true
+        Camera_right: true
+        CirtesuModel: true
+        Coupler_Marker: true
+        DepthCloud: true
+        Grid: true
+        Ground Truth: true
+        MarkerArray: true
+        Path: true
+        Pipe_Marker: true
+        RobotModel: true
+        TF: true
+        Value: false
+        World origin: true
+        Zed_Camera: true
+        altitude: true
+        object_pose: true
+        perception_image: true
+        tp_ee_pose: true
+      Zoom Factor: 1
+    - Class: rviz/Camera
+      Enabled: false
+      Image Rendering: background and overlay
+      Image Topic: /girona500/down_camera/camera/image_color
+      Name: Camera_down
+      Overlay Alpha: 0.5
+      Queue Size: 2
+      Transport Hint: raw
+      Unreliable: false
+      Value: false
+      Visibility:
+        Camera_front: true
+        Camera_gripper: true
+        Camera_left: true
+        Camera_right: true
+        CirtesuModel: true
+        Coupler_Marker: true
+        DepthCloud: true
+        Grid: true
+        Ground Truth: true
+        MarkerArray: true
+        Path: true
+        Pipe_Marker: true
+        RobotModel: true
+        TF: true
+        Value: false
+        World origin: true
+        Zed_Camera: true
+        altitude: true
+        object_pose: true
+        perception_image: true
+        tp_ee_pose: true
+      Zoom Factor: 1
+    - Class: rviz/Camera
+      Enabled: true
+      Image Rendering: background and overlay
+      Image Topic: /girona500/right_camera/camera/image_color
+      Name: Camera_right
+      Overlay Alpha: 0.5
+      Queue Size: 2
+      Transport Hint: raw
+      Unreliable: false
+      Value: true
+      Visibility:
+        Camera_down: true
+        Camera_front: true
+        Camera_gripper: true
+        Camera_left: true
+        CirtesuModel: true
+        Coupler_Marker: true
+        DepthCloud: true
+        Grid: true
+        Ground Truth: true
+        MarkerArray: true
+        Path: true
+        Pipe_Marker: true
+        RobotModel: true
+        TF: true
+        Value: false
+        World origin: true
+        Zed_Camera: true
+        altitude: true
+        object_pose: true
+        perception_image: true
+        tp_ee_pose: true
+      Zoom Factor: 1
+    - Class: rviz/Camera
+      Enabled: true
+      Image Rendering: background and overlay
+      Image Topic: /girona500/left_camera/camera/image_color
+      Name: Camera_left
+      Overlay Alpha: 0.5
+      Queue Size: 2
+      Transport Hint: raw
+      Unreliable: false
+      Value: true
+      Visibility:
+        Camera_down: true
+        Camera_front: true
+        Camera_gripper: true
+        Camera_right: true
         CirtesuModel: true
         Coupler_Marker: true
         DepthCloud: true
@@ -644,7 +707,7 @@ Visualization Manager:
       Use rainbow: true
       Value: true
     - Class: rviz/Camera
-      Enabled: true
+      Enabled: false
       Image Rendering: background and overlay
       Image Topic: /girona500/zed/zed_node/rgb_camera/image_color
       Name: Zed_Camera
@@ -652,11 +715,13 @@ Visualization Manager:
       Queue Size: 2
       Transport Hint: raw
       Unreliable: false
-      Value: true
+      Value: false
       Visibility:
+        Camera_down: true
         Camera_front: true
         Camera_gripper: true
-        Camera_poster: true
+        Camera_left: true
+        Camera_right: true
         CirtesuModel: true
         Coupler_Marker: true
         DepthCloud: true
@@ -688,7 +753,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 4.041853904724121
+      Distance: 4.149567604064941
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -696,9 +761,9 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: -0.9927293062210083
-        Y: 0.39527627825737
-        Z: -1.1331055164337158
+        X: -0.21678060293197632
+        Y: 0.02231553941965103
+        Z: -0.001080724410712719
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
@@ -729,18 +794,22 @@ Visualization Manager:
         Target Frame: girona500/base_link
         Yaw: 5.023582458496094
 Window Geometry:
+  Camera_down:
+    collapsed: false
   Camera_front:
     collapsed: false
   Camera_gripper:
     collapsed: false
-  Camera_poster:
+  Camera_left:
+    collapsed: false
+  Camera_right:
     collapsed: false
   Displays:
     collapsed: false
   Height: 1016
   Hide Left Dock: false
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd0000000200000000000002f40000039efc0200000013fb000000100044006900730070006c006100790073010000003d0000025d000000c900fffffffb00000014005a00650064005f00430061006d00650072006101000002a00000013b0000001600fffffffb0000001800460072006f006e0074002000430061006d006500720061010000003d0000014e0000000000000000fb0000001c0047007200690070007000650072002000430061006d00650072006100000001720000014d0000000000000000fb0000000a0049006d006100670065000000003d000003050000000000000000fb0000000a0049006d006100670065010000003a000005660000000000000000fb0000000a005600690065007700730200000496000001bd000002ea0000026cfb0000000a0049006d00610067006500000000280000043b0000000000000000fb0000001400530074006500720065006f004c00650066007400000001a9000000bc0000000000000000fb0000000c00430061006d00650072006100000003be000000d40000000000000000fb0000000c00430061006d006500720061000000047c000000160000000000000000fb0000000a0049006d00610067006500000003be000000d40000000000000000fb0000000c00430061006d006500720061000000047c000000160000000000000000fb00000008004d0053004900530000000179000001c90000000000000000fb0000000a0049006d006100670065010000019b000001450000000000000000fb0000000c00430061006d006500720061010000012d000002150000000000000000fb0000001600530074006500720065006f005200690067006800740000000206000000e90000000000000000fb0000001a00430061006d006500720061005f0070006f007300740065007200000001e3000001430000001600fffffffb0000002000700065007200630065007000740069006f006e005f0069006d00610067006500000002a2000001390000001600ffffff00000001000001de0000039efc0200000008fb0000001800430061006d006500720061005f00660072006f006e0074000000003d0000039e0000001600fffffffb0000001c00430061006d006500720061005f0067007200690070007000650072010000003d0000039e0000001600fffffffc0000003d000000240000000000fffffffa000000000100000002fb0000001c005000690070006500200044006500740065006300740069006f006e0000000000ffffffff0000000000000000fb0000001e00500061006e0065006c00200044006500740065006300740069006f006e00000006aa0000020b0000000000000000fb0000001e0041007200750063006f00200064006500740065006300740069006f006e00000002e6000001740000000000000000fb0000001e0041007200750063006f00200064006500740065006300740069006f006e0100000260000001350000000000000000fb0000000c00430061006d00650072006100000004a2000000160000000000000000fb0000000c00430061006d00650072006100000004b8000000160000000000000000fb0000000a0049006d00610067006500000001f90000017f00000000000000000000025a0000039e00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd00000002000000000000022d0000039efc0200000016fb000000100044006900730070006c006100790073010000003d0000019f000000c900fffffffb00000014005a00650064005f00430061006d00650072006100000001c8000000ca0000001600fffffffb0000001800460072006f006e0074002000430061006d006500720061010000003d0000014e0000000000000000fb0000001c0047007200690070007000650072002000430061006d00650072006100000001720000014d0000000000000000fb0000000a0049006d006100670065000000003d000003050000000000000000fb0000000a0049006d006100670065010000003a000005660000000000000000fb0000000a005600690065007700730200000496000001bd000002ea0000026cfb0000000a0049006d00610067006500000000280000043b0000000000000000fb0000001400530074006500720065006f004c00650066007400000001a9000000bc0000000000000000fb0000000c00430061006d00650072006100000003be000000d40000000000000000fb0000000c00430061006d006500720061000000047c000000160000000000000000fb0000000a0049006d00610067006500000003be000000d40000000000000000fb0000000c00430061006d006500720061000000047c000000160000000000000000fb00000008004d0053004900530000000179000001c90000000000000000fb0000000a0049006d006100670065010000019b000001450000000000000000fb0000000c00430061006d006500720061010000012d000002150000000000000000fb0000001600530074006500720065006f005200690067006800740000000206000000e90000000000000000fb0000001a00430061006d006500720061005f0070006f0073007400650072000000023a000001a10000000000000000fb0000002000700065007200630065007000740069006f006e005f0069006d00610067006500000002a2000001390000001600fffffffb0000001600430061006d006500720061005f0064006f0077006e000000018b000000ba0000001600fffffffb0000001800430061006d006500720061005f0072006900670068007401000001e2000001130000001600fffffffb0000001600430061006d006500720061005f006c00650066007401000002fb000000e00000001600ffffff00000001000001de0000039efc0200000009fb0000001c00430061006d006500720061005f0067007200690070007000650072010000003d000001c30000001600fffffffb0000001800430061006d006500720061005f00660072006f006e00740100000206000001d50000001600fffffffb0000001c00430061006d006500720061005f0067007200690070007000650072000000020f000001cc0000000000000000fc0000003d000000240000000000fffffffa000000000100000002fb0000001c005000690070006500200044006500740065006300740069006f006e0000000000ffffffff0000000000000000fb0000001e00500061006e0065006c00200044006500740065006300740069006f006e00000006aa0000020b0000000000000000fb0000001e0041007200750063006f00200064006500740065006300740069006f006e00000002e6000001740000000000000000fb0000001e0041007200750063006f00200064006500740065006300740069006f006e0100000260000001350000000000000000fb0000000c00430061006d00650072006100000004a2000000160000000000000000fb0000000c00430061006d00650072006100000004b8000000160000000000000000fb0000000a0049006d00610067006500000001f90000017f0000000000000000000003210000039e00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Views:
     collapsed: false
   Width: 1848

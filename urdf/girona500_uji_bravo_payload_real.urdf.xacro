@@ -83,14 +83,40 @@
     <child link="girona500/zedm/base_link"/>
     <origin rpy="3.1416 0.0 0.0" xyz="0.33 0.20 0.28 "/>
   </joint>
-  
+
+  <!-- Camera front -->
   <link name="girona500/front_camera/camera"/>
   <joint name="front_camera" type="fixed">
     <parent link="girona500/base_link"/>
     <child link="girona500/front_camera/camera"/>
     <origin rpy="1.57 0.0 1.57" xyz="0.35 -0.06 0.11 "/>
   </joint>
+
+  <!-- Camera down -->
+  <link name="$(arg robot_namespace)/down_camera/camera" />
+  <joint name="$(arg robot_namespace)_base_link_to_camera_down" type="fixed">
+    <parent link="$(arg robot_namespace)/base_link" />
+    <child link="$(arg robot_namespace)/down_camera/camera" />
+    <origin rpy="0.0 0.0 1.57" xyz="0.2 0.0 0.55" />
+  </joint>
   
+  <!-- Camera right -->
+  <link name="$(arg robot_namespace)/right_camera/camera" />
+  <joint name="$(arg robot_namespace)_base_link_to_camera_right" type="fixed">
+    <parent link="$(arg robot_namespace)/base_link" />
+    <child link="$(arg robot_namespace)/right_camera/camera" />
+    <origin rpy="${pi/2} 0.0 ${pi}" xyz="0.45 0.0 0.15" />
+  </joint>
+
+  <!-- Camera left -->
+  <link name="$(arg robot_namespace)/left_camera/camera" />
+  <joint name="$(arg robot_namespace)_base_link_to_camera_left" type="fixed">
+    <parent link="$(arg robot_namespace)/base_link" />
+    <child link="$(arg robot_namespace)/left_camera/camera" />
+    <origin rpy="${pi/2} 0.0 0.0" xyz="0.45 0.0 0.15" />
+  </joint>
+  
+  <!-- Camera gripper -->
   <link name="girona500/bravo/gripper"/>
   <joint name="bravo_gripper" type="fixed">
     <parent link="girona500/bravo/link6"/>
@@ -99,28 +125,19 @@
   </joint>
 
   <!-- Camera Zed-->
-  <link name="$(arg robot_namespace)/zed_camera_link"/> 
+  <!-- <link name="$(arg robot_namespace)/zed_camera_link"/> 
   <joint name="$(arg robot_namespace)_girona_to_zed" type="fixed">
     <parent link="$(arg robot_namespace)/base_link" />
     <child link="$(arg robot_namespace)/zed_camera_link" />
     <origin rpy="${pi/4} 0.0 ${pi/2}" xyz="0.46 0.0 0.61" />
-  </joint>
+  </joint> -->
 
   <!-- Camera Zed-->
-  <link name="$(arg robot_namespace)/zed_camera_link1"/> 
+  <!-- <link name="$(arg robot_namespace)/zed_camera_link1"/> 
   <joint name="$(arg robot_namespace)_girona_to_zed_depth" type="fixed">
     <parent link="$(arg robot_namespace)/base_link" />
     <child link="$(arg robot_namespace)/zed_camera_link1" />
     <origin rpy="${pi/4} 0.0 ${pi/2}" xyz="0.46 0.0 0.61" />
-  </joint>
-
-  <!-- Camera poster -->
-  <link name="$(arg robot_namespace)/camera_poster" />
-  <joint name="$(arg robot_namespace)_base_link_to_camera_poster" type="fixed">
-    <parent link="$(arg robot_namespace)/base_link" />
-    <child link="$(arg robot_namespace)/camera_poster" />
-    <origin rpy="0.0 0.0 1.57" xyz="0.2 0.0 0.55" />
-  </joint>
-
+  </joint> -->
 
 </robot>

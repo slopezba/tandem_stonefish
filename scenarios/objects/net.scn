@@ -6,12 +6,12 @@
 
 	<static name="$(arg name)" type="model">
 		<physical>
-			<mesh filename="$(find tandem_stonefish)/resources/objects/net/net_fishfarm_holes.obj"
+			<mesh filename="$(find tandem_stonefish)/resources/objects/net/net_just_plane_phy.obj"
 					scale="1.0" />
 			<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
 		</physical>
 		<visual>
-			<mesh filename="$(find tandem_stonefish)/resources/objects/net/net_fishfarm_holes.obj"
+			<mesh filename="$(find tandem_stonefish)/resources/objects/net/net_vis.obj"
 					scale="1.0" />
 			<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
 		</visual>
@@ -19,5 +19,21 @@
 		<look name="black" />
 		<world_transform xyz="$(arg xyz)" rpy="$(arg rpy)"/>
 	</static>
+
+	<!-- <static name="$(arg name)_hole" type="model">
+		<physical>
+			<mesh filename="$(find tandem_stonefish)/resources/objects/net/net_hole_phy.obj"
+					scale="1.0" />
+			<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+		</physical>
+		<visual>
+			<mesh filename="$(find tandem_stonefish)/resources/objects/net/net_hole_phy.obj"
+					scale="1.0" />
+			<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+		</visual>
+		<material name="Fiberglass" />
+		<look name="black" />
+		<world_transform xyz="$(arg xyz)" rpy="$(arg rpy)"/>
+	</static> -->
 	
 </scenario>
