@@ -537,7 +537,7 @@
 			<origin rpy="0 0 ${-pi/2}" xyz="0 0 0.05" />
 		</joint>
 
-		<joint name="bravo/finger_small_joint" type="revolute">
+		<joint name="bravo/right_finger_joint" type="revolute">
 			<!-- <parent name="RB7JawsBase" /> -->
 			<parent name="RB7CustomGripper" />
 			<child name="gripper_left_finger" />
@@ -546,7 +546,7 @@
 			<limits min="-2.4" max="-1.57" />
 		</joint>
 
-		<joint name="bravo/finger_large_joint" type="revolute">
+		<joint name="bravo/left_finger_joint" type="revolute">
 			<parent name="RB7CustomGripper" />
 			<child name="gripper_right_finger" />
 			<origin rpy="0 0 0" xyz="-0.045 0.0 0.23" />
@@ -773,12 +773,12 @@
 		</actuator>
 
 		<actuator name="ServoFingerSmallRB7" type="servo">
-			<joint name="bravo/finger_small_joint" />
+			<joint name="bravo/right_finger_joint" />
 			<controller position_gain="1.0" velocity_gain="1.0" max_torque="10000.0" />
 		</actuator>
 
 		<actuator name="ServoFingerLargeRB7" type="servo">
-			<joint name="bravo/finger_large_joint" />
+			<joint name="bravo/left_finger_joint" />
 			<controller position_gain="1.0" velocity_gain="1.0" max_torque="10000.0" />
 		</actuator>
 
@@ -792,8 +792,8 @@
 			<joint name="bravo/joint4" />
 			<joint name="bravo/joint5" />
 			<joint name="bravo/joint6" />
-			<joint name="bravo/finger_small_joint" />
-			<joint name="bravo/finger_large_joint" />
+			<joint name="bravo/right_finger_joint" />
+			<joint name="bravo/left_finger_joint" />
 		</ros_control_interface>
 
 
