@@ -53,7 +53,7 @@
 	<include file="$(find tandem_stonefish)/scenarios/robots/girona500_uji_bravo_real_cameras.scn">
 		<arg name="robot_name" value="girona500" />
 		<arg name="start_yaw" value="0.0" />
-		<arg name="start_position" value="0.0 0.0 0.75" />
+		<arg name="start_position" value="2.44 -1.37 1.86" />
 	</include>
 
 </scenario>
