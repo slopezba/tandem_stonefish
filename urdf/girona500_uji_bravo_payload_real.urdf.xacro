@@ -63,7 +63,7 @@
     <origin rpy="${pi} 0.0 0.0" xyz="0.655 0 0.39"/>
   </joint>
   <!-- <xacro:reach_bravo7_gripper prefix="girona500/bravo"/> -->
-  <xacro:reach_bravo7_gripper prefix="girona500/bravo"/>
+  <xacro:reach_bravo7_gripper prefix="girona500/bravo" use_sim="true"/>
 
   <link name="girona500/bravo/gripper/camera"/>
   <joint name="bravo_camera_joint" type="fixed">

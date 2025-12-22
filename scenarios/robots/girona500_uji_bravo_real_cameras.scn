@@ -554,6 +554,24 @@
 			<limits min="1.57" max="2.4" />
 		</joint>
 
+		<sensor name="force_sensor_left" rate="100.0" type="forcetorque">
+			<range force="10.0 10.0 100.0" torque="1.0 1.0 2.0"/>
+			<noise force="0.5" torque="0.05"/>
+			<origin xyz="0.0 0.13 0.25" rpy="0.0 0.0 0.0"/>
+			<history samples="1"/>
+			<joint name="bravo/patch"/>
+			<ros_publisher topic="/$(arg robot_name)/force_sensor/left_finger" />
+		</sensor>
+
+		<sensor name="force_sensor_right" rate="100.0" type="forcetorque">
+			<range force="10.0 10.0 100.0" torque="1.0 1.0 2.0"/>
+			<noise force="0.5" torque="0.05"/>
+			<origin xyz="0.0 -0.13 0.25" rpy="0.0 0.0 0.0"/>
+			<history samples="1"/>
+			<joint name="bravo/patch"/>
+			<ros_publisher topic="/$(arg robot_name)/force_sensor/right_finger" />
+		</sensor>
+
 		<sensor
 			name="pressure" type="pressure" rate="5.0">
 			<link name="Vehicle" />
