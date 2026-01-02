@@ -48,6 +48,12 @@
                 type="joy_to_teleoperation.py" output="screen">
                 <param name="bravo_ns" value="bravo" />
             </node>
+
+            <node name="body_velocity_republisher" pkg="intervention_cirtesu" type="tp_body_vel_relay.py" output="screen">
+                <param name="sub_topic" value="/girona500/plane_inspection/cmd_vel"/>
+                <param name="pub_topic" value="/girona500/controller/body_velocity_req"/>
+                <param name="service_name" value="/girona500/tp_controller/active"/>
+            </node>        
             <!-- <node name="fx10_to_teleoperation" pkg="cola2_control"
                 type="logitech_fx10_to_teleoperation_node.py" /> -->
         </group>
