@@ -803,7 +803,7 @@
 
 		<world_transform rpy="0.0 0.0 0.0" xyz="$(arg start_position)" />
 
-		<ros_control_interface namespace="/$(arg robot_name)/bravo" type="velocity">
+		<ros_control_interface namespace="/$(arg robot_name)/bravo" type="velocity" >
 			<joint name="bravo/joint1" />
 			<joint name="bravo/joint2" />
 			<joint name="bravo/joint3" />
@@ -813,7 +813,6 @@
 			<joint name="bravo/right_finger_joint" />
 			<joint name="bravo/left_finger_joint" />
 		</ros_control_interface>
-
 
 		<ros_subscriber
 			thrusters="/$(arg robot_name)/controller/thruster_setpoints_sim" />

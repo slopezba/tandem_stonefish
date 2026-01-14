@@ -253,82 +253,12 @@ Visualization Manager:
       Unreliable: false
       Value: false
     - Class: rviz/TF
-      Enabled: true
+      Enabled: false
       Filter (blacklist): ""
       Filter (whitelist): ""
       Frame Timeout: 15
       Frames:
         All Enabled: false
-        cirtesu_base_link:
-          Value: false
-        girona500/base:
-          Value: false
-        girona500/base_link:
-          Value: false
-        girona500/bravo/base_link:
-          Value: false
-        girona500/bravo/gripper:
-          Value: false
-        girona500/bravo/gripper/camera:
-          Value: true
-        girona500/bravo/gripper_base_link:
-          Value: true
-        girona500/bravo/left_finger_link:
-          Value: true
-        girona500/bravo/link1:
-          Value: true
-        girona500/bravo/link2:
-          Value: true
-        girona500/bravo/link3:
-          Value: true
-        girona500/bravo/link4:
-          Value: true
-        girona500/bravo/link5:
-          Value: true
-        girona500/bravo/link6:
-          Value: false
-        girona500/bravo/right_finger_link:
-          Value: true
-        girona500/down_camera/camera:
-          Value: true
-        girona500/dvl:
-          Value: false
-        girona500/dvl_altitude:
-          Value: false
-        girona500/front_camera/camera:
-          Value: true
-        girona500/gps:
-          Value: false
-        girona500/imu:
-          Value: false
-        girona500/imu_filter:
-          Value: false
-        girona500/left_camera/camera:
-          Value: true
-        girona500/payload:
-          Value: false
-        girona500/pressure:
-          Value: false
-        girona500/right_camera/camera:
-          Value: true
-        girona500/thruster_0:
-          Value: false
-        girona500/thruster_1:
-          Value: false
-        girona500/thruster_2:
-          Value: false
-        girona500/thruster_3:
-          Value: false
-        girona500/thruster_4:
-          Value: false
-        girona500/zedm/base_link:
-          Value: false
-        poster_rectangular_link:
-          Value: false
-        world:
-          Value: false
-        world_ned:
-          Value: false
       Marker Alpha: 1
       Marker Scale: 1
       Name: TF
@@ -336,65 +266,9 @@ Visualization Manager:
       Show Axes: true
       Show Names: false
       Tree:
-        world:
-          world_ned:
-            cirtesu_base_link:
-              poster_rectangular_link:
-                {}
-            girona500/base_link:
-              girona500/base:
-                {}
-              girona500/bravo/base_link:
-                girona500/bravo/link1:
-                  girona500/bravo/link2:
-                    girona500/bravo/link3:
-                      girona500/bravo/link4:
-                        girona500/bravo/link5:
-                          girona500/bravo/link6:
-                            girona500/bravo/gripper:
-                              {}
-                            girona500/bravo/gripper/camera:
-                              girona500/bravo/gripper_base_link:
-                                {}
-                              girona500/bravo/left_finger_link:
-                                {}
-                              girona500/bravo/right_finger_link:
-                                {}
-              girona500/down_camera/camera:
-                {}
-              girona500/dvl:
-                girona500/dvl_altitude:
-                  {}
-              girona500/front_camera/camera:
-                {}
-              girona500/gps:
-                {}
-              girona500/imu:
-                {}
-              girona500/imu_filter:
-                {}
-              girona500/left_camera/camera:
-                {}
-              girona500/payload:
-                {}
-              girona500/pressure:
-                {}
-              girona500/right_camera/camera:
-                {}
-              girona500/thruster_0:
-                {}
-              girona500/thruster_1:
-                {}
-              girona500/thruster_2:
-                {}
-              girona500/thruster_3:
-                {}
-              girona500/thruster_4:
-                {}
-              girona500/zedm/base_link:
-                {}
+        {}
       Update Interval: 0
-      Value: true
+      Value: false
     - Class: rviz/Camera
       Enabled: false
       Image Rendering: background and overlay
@@ -627,7 +501,7 @@ Visualization Manager:
       Shaft Length: 1
       Shaft Radius: 0.05000000074505806
       Shape: Axes
-      Topic: /tp_controller/tasks/bravo_ee_configuration/target
+      Topic: /tp_controller/tasks/bravo_ee_configuration_feedforward/target
       Unreliable: false
       Value: true
     - Alpha: 1
@@ -720,7 +594,7 @@ Visualization Manager:
       Marker Topic: /girona500/plane_inspection/path_markers
       Name: MarkerArray
       Namespaces:
-        plane_inspection_path: true
+        {}
       Queue Size: 100
       Value: true
     - Alpha: 1
@@ -761,7 +635,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 14.907099723815918
+      Distance: 2.7852532863616943
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -777,9 +651,9 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.7147980332374573
+      Pitch: -0.26020196080207825
       Target Frame: girona500/base_link
-      Yaw: 1.4797908067703247
+      Yaw: 1.7397905588150024
     Saved:
       - Class: rviz/Orbit
         Distance: 5.901301860809326

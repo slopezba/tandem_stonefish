@@ -49,7 +49,7 @@
                 <param name="bravo_ns" value="bravo" />
             </node>
 
-            <node name="body_velocity_republisher" pkg="intervention_cirtesu" type="tp_body_vel_relay.py" output="screen">
+            <node name="body_velocity_republisher_plane" pkg="intervention_cirtesu" type="tp_body_vel_relay.py" output="screen">
                 <param name="sub_topic" value="/girona500/plane_inspection/cmd_vel"/>
                 <param name="pub_topic" value="/girona500/controller/body_velocity_req"/>
                 <param name="service_name" value="/girona500/tp_controller/active"/>

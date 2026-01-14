@@ -18,6 +18,9 @@ from std_msgs.msg import Float64MultiArray, MultiArrayDimension, Float64
 from controller_manager_msgs.srv import SwitchController
 from cola2_msgs.srv import DigitalOutput, String
 from std_srvs.srv import SetBool
+from geometry_msgs.msg import TwistStamped, PoseStamped
+import tf2_ros
+from iauv_kinematic_control.srv import SwitchTasks
 class LogitechFX10Atlantis(JoystickBase):
     """LogitechFX10Atlantis controler node."""
 
@@ -68,6 +71,7 @@ class LogitechFX10Atlantis(JoystickBase):
         self.left_right = 0.0
         self.start_service = ""
         self.stop_service = ""
+        self.joint_pos_task_active = False
         
         namespace = rospy.get_namespace()
         self.get_config()
@@ -111,12 +115,27 @@ class LogitechFX10Atlantis(JoystickBase):
         except rospy.ServiceException as e:
             rospy.logwarn("%s: Service call failed: %s", self.name, e)
 
-
         namespace = rospy.get_namespace()
         self.get_config()
 
         # Create publisher to manipulator 
         bravo_ns = rospy.get_param("~bravo_ns")
+
+        self.pub_bravo_ee_ff = rospy.Publisher(
+            '/tp_controller/tasks/bravo_ee_configuration_feedforward/feedforward',
+            TwistStamped,
+            queue_size=1
+        )
+        self.pub_bravo_ee_target = rospy.Publisher(
+            '/tp_controller/tasks/bravo_ee_configuration_feedforward/target',
+            PoseStamped,
+            queue_size=1
+        )
+        # TF listener for EE pose
+        self.tf_buffer = tf2_ros.Buffer()
+        self.tf_listener = tf2_ros.TransformListener(self.tf_buffer)
+
+        self.ee_ff_cmd = TwistStamped()
 
         self.pub_bravoarm_desired_joint_velocity = rospy.Publisher(
             namespace + bravo_ns + '/joint_teleop_velocity_controller/command',
@@ -134,9 +153,27 @@ class LogitechFX10Atlantis(JoystickBase):
             namespace + bravo_ns + '/gripper_velocity_controller_finger_small/command',
             Float64,
             queue_size = 1)
-        
-        
-
+        self.switch_tasks_srv = rospy.ServiceProxy(
+            '/tp_controller/switch_tasks',
+            SwitchTasks
+        )
+        self.pub_joint_pos_target = rospy.Publisher(
+            '/tp_controller/tasks/joint_positions/target',
+            Float64MultiArray,
+            queue_size=1
+        ) 
+        #target de nominal position task
+        self.joint_pos_target = Float64MultiArray()
+        self.joint_pos_target.layout.dim = [MultiArrayDimension()]
+        self.joint_pos_target.layout.dim[0].label = ''
+        self.joint_pos_target.layout.dim[0].size = 3
+        self.joint_pos_target.layout.dim[0].stride = 1
+        self.joint_pos_target.layout.data_offset = 0
+        self.joint_pos_target.data = [
+            -1.5700000000939462,
+            0.7499999991549328,
+            -0.7200000182190157,
+        ]    
 
         self.bravoarm_joint_cmd = Float64MultiArray()
         self.bravoarm_joint_cmd.layout.dim = [MultiArrayDimension()]
@@ -223,10 +260,9 @@ class LogitechFX10Atlantis(JoystickBase):
                     rospy.ServiceProxy('/girona500/tp_controller/active', SetBool)(False)
                 except (rospy.ServiceException, rospy.ROSException) as e:
                     rospy.logwarn("No se pudo llamar al servicio /girona500/tp_controller/active: %s", str(e))
-
-        if joy.buttons[self.BUTTON_RIGHT] == 1:
-            if (joy.axes[self.CROSS_HORIZONTAL] == self.MOVE_RIGHT):
+            elif (joy.axes[self.CROSS_HORIZONTAL] == self.MOVE_RIGHT):
                 rospy.loginfo("Switching to bravo ik controller")
+                self.mode = 3 #bravo ik mode (cartesian velocity)
                 rospy.ServiceProxy('/girona500/bravo/controller_manager/switch_controller', 
                                    SwitchController)(['joint_velocity_controller','gripper_position_controller_finger_large', 'gripper_position_controller_finger_small'], ['joint_teleop_velocity_controller','joint_trajectory_controller', 'gripper_velocity_controller_finger_large', 'gripper_velocity_controller_finger_small'],
                                                       1, True, 0.0)
@@ -326,8 +362,103 @@ class LogitechFX10Atlantis(JoystickBase):
                 rospy.loginfo("Calling /girona500/bravo/predefined_positions/do data= 'look_down'")
                 rospy.ServiceProxy('/girona500/bravo/predefined_positions/do', String)(data='look_down')
 
+        elif self.mode == 3: #bravo ik mode (cartesian velocity)
+            self.joy_msg.axes[JoystickBase.AXIS_TWIST_U] = 0.0
+            self.joy_msg.axes[JoystickBase.AXIS_TWIST_V] = 0.0
+            self.joy_msg.axes[JoystickBase.AXIS_TWIST_W] = 0.0
+            self.joy_msg.axes[JoystickBase.AXIS_TWIST_R] = 0.0
+
+            scale_lin = 0.3   # m/s
+            scale_ang = 0.3    # rad/s
+
+            self.ee_ff_cmd.header.stamp = rospy.Time.now()
+            self.ee_ff_cmd.header.frame_id = "girona500/base_link"
+            
+             # ---------- LEFT STICK ----------
+            if joy.buttons[self.BUTTON_LEFT] == 0:
+                # Traslación EE (X, Y)
+                self.ee_ff_cmd.twist.linear.z =  scale_lin * -joy.axes[self.LEFT_JOY_VERTICAL]
+                self.ee_ff_cmd.twist.angular.z = scale_lin * -joy.axes[self.LEFT_JOY_HORIZONTAL]
+            else:
+                # Rotación EE (X, Y)
+                self.ee_ff_cmd.twist.angular.y =  scale_ang * joy.axes[self.LEFT_JOY_VERTICAL]
+                self.ee_ff_cmd.twist.angular.x =  -scale_ang * joy.axes[self.LEFT_JOY_HORIZONTAL]
+
+            # ---------- RIGHT STICK ----------
+            # Z lineal
+            self.ee_ff_cmd.twist.linear.x = scale_lin * joy.axes[self.RIGHT_JOY_VERTICAL]
+
+            # Yaw EE
+            self.ee_ff_cmd.twist.linear.y = -scale_ang * joy.axes[self.RIGHT_JOY_HORIZONTAL]
+            self.publish_current_ee_pose_as_target()
+
+            # ---------- Activate an deactivate the nominal task ----------
+            deadband = 0.02
+
+            v_norm = abs(self.ee_ff_cmd.twist.linear.x) + \
+                    abs(self.ee_ff_cmd.twist.linear.y) + \
+                    abs(self.ee_ff_cmd.twist.linear.z) + \
+                    abs(self.ee_ff_cmd.twist.angular.x) + \
+                    abs(self.ee_ff_cmd.twist.angular.y) + \
+                    abs(self.ee_ff_cmd.twist.angular.z)
+            if v_norm < deadband:
+                if not self.joint_pos_task_active:
+                    rospy.loginfo("[IK mode] Activating joint_positions task")
+
+                    try:
+                        self.switch_tasks_srv(
+                            enable_tasks=['joint_positions'],
+                            disable_tasks=[]
+                        )
+                    except rospy.ServiceException as e:
+                        rospy.logwarn(f"Failed to enable joint_positions: {e}")
+                        return
+
+                    # Publicar target UNA VEZ
+                    self.pub_joint_pos_target.publish(self.joint_pos_target)
+
+                    self.joint_pos_task_active = True
+
+            else:
+                # MOVIENDO → desactivar nominal
+                if self.joint_pos_task_active:
+                    rospy.loginfo("[IK mode] Disabling joint_positions task")
+
+                    try:
+                        self.switch_tasks_srv(
+                            enable_tasks=[],
+                            disable_tasks=['joint_positions']
+                        )
+                    except rospy.ServiceException as e:
+                        rospy.logwarn(f"Failed to disable joint_positions: {e}")
+                        return
+
+                    self.joint_pos_task_active = False    
+
         self.mutual_exclusion.release()
 
+    def publish_current_ee_pose_as_target(self):
+        try:
+            T = self.tf_buffer.lookup_transform(
+                "world_ned",
+                "girona500/bravo/gripper/camera",
+                rospy.Time(0),
+                rospy.Duration(0.05)
+            )
+
+            pose = PoseStamped()
+            pose.header.stamp = rospy.Time.now()
+            pose.header.frame_id = "world_ned"
+            pose.pose.position.x = T.transform.translation.x
+            pose.pose.position.y = T.transform.translation.y
+            pose.pose.position.z = T.transform.translation.z
+            pose.pose.orientation = T.transform.rotation
+
+            self.pub_bravo_ee_target.publish(pose)
+
+        except Exception as e:
+            rospy.logwarn_throttle(1.0, f"[IK mode] Cannot publish EE target: {e}")
+            
     def iterate(self, event):
         """ This method is a callback of a timer. This is used to publish the
             output joy message """
@@ -339,6 +470,8 @@ class LogitechFX10Atlantis(JoystickBase):
             # self.pub_bravoarm_desired_gripper_state.publish(self.bravoarm_gripper_cmd)
             self.pub_bravoarm_desired_gripper_state_large.publish(-self.bravoarm_gripper_cmd)
             self.pub_bravoarm_desired_gripper_state_small.publish(self.bravoarm_gripper_cmd)
+        if self.mode == 3:
+            self.pub_bravo_ee_ff.publish(self.ee_ff_cmd)
 
         self.mutual_exclusion.release()
         # Reset buttons
