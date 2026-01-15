@@ -72,7 +72,32 @@ class LogitechFX10Atlantis(JoystickBase):
         self.start_service = ""
         self.stop_service = ""
         self.joint_pos_task_active = False
-        
+
+        ik_cfg = rospy.get_param("~ik_mode")
+
+        self.ik_world_frame = ik_cfg["frames"]["world"]
+        self.cartesian_velocity_frame = ik_cfg["frames"]["cartesian_velocity_frame"]
+        self.ik_ee_frame = ik_cfg["frames"]["ee"]
+
+        self.scale_lin = ik_cfg["scaling"]["linear"]
+        self.scale_ang = ik_cfg["scaling"]["angular"]
+        self.deadband = ik_cfg["deadband"]["velocity_norm"]
+
+        jp_cfg = rospy.get_param("~ik_mode/tasks/joint_positions")
+
+        self.joint_pos_task_name = jp_cfg["name"]
+
+        joint_names = jp_cfg["joints"]["names"]
+        joint_target = jp_cfg["joints"]["target"]
+
+        # Seguridad básica
+        if len(joint_names) != len(joint_target):
+            rospy.logfatal(
+                "joint_positions: names and target size mismatch "
+                f"({len(joint_names)} vs {len(joint_target)})"
+            )
+            rospy.signal_shutdown("Invalid joint_positions config")
+
         namespace = rospy.get_namespace()
         self.get_config()
 
@@ -165,15 +190,11 @@ class LogitechFX10Atlantis(JoystickBase):
         #target de nominal position task
         self.joint_pos_target = Float64MultiArray()
         self.joint_pos_target.layout.dim = [MultiArrayDimension()]
-        self.joint_pos_target.layout.dim[0].label = ''
-        self.joint_pos_target.layout.dim[0].size = 3
+        self.joint_pos_target.layout.dim[0].label = 'joints'
+        self.joint_pos_target.layout.dim[0].size = len(joint_target)
         self.joint_pos_target.layout.dim[0].stride = 1
         self.joint_pos_target.layout.data_offset = 0
-        self.joint_pos_target.data = [
-            -1.5700000000939462,
-            0.7499999991549328,
-            -0.7200000182190157,
-        ]    
+        self.joint_pos_target.data = joint_target
 
         self.bravoarm_joint_cmd = Float64MultiArray()
         self.bravoarm_joint_cmd.layout.dim = [MultiArrayDimension()]
@@ -183,7 +204,10 @@ class LogitechFX10Atlantis(JoystickBase):
         self.bravoarm_joint_cmd.layout.data_offset = 0
         self.bravoarm_joint_cmd.data = [0.0]*6
 
-        self.bravoarm_gripper_cmd = 0.0       
+        self.bravoarm_gripper_cmd = 0.0
+        rospy.loginfo(
+            f"[IK mode] joint_positions target for joints: {joint_names}"
+        )   
 
     def update_joy(self, joy):
         """Receive joystic raw data."""
@@ -368,32 +392,29 @@ class LogitechFX10Atlantis(JoystickBase):
             self.joy_msg.axes[JoystickBase.AXIS_TWIST_W] = 0.0
             self.joy_msg.axes[JoystickBase.AXIS_TWIST_R] = 0.0
 
-            scale_lin = 0.3   # m/s
-            scale_ang = 0.3    # rad/s
-
             self.ee_ff_cmd.header.stamp = rospy.Time.now()
-            self.ee_ff_cmd.header.frame_id = "girona500/base_link"
+            self.ee_ff_cmd.header.frame_id = self.cartesian_velocity_frame
             
              # ---------- LEFT STICK ----------
             if joy.buttons[self.BUTTON_LEFT] == 0:
                 # Traslación EE (X, Y)
-                self.ee_ff_cmd.twist.linear.z =  scale_lin * -joy.axes[self.LEFT_JOY_VERTICAL]
-                self.ee_ff_cmd.twist.angular.z = scale_lin * -joy.axes[self.LEFT_JOY_HORIZONTAL]
+                self.ee_ff_cmd.twist.linear.z =  self.scale_lin * -joy.axes[self.LEFT_JOY_VERTICAL]
+                self.ee_ff_cmd.twist.angular.z = self.scale_lin * -joy.axes[self.LEFT_JOY_HORIZONTAL]
             else:
                 # Rotación EE (X, Y)
-                self.ee_ff_cmd.twist.angular.y =  scale_ang * joy.axes[self.LEFT_JOY_VERTICAL]
-                self.ee_ff_cmd.twist.angular.x =  -scale_ang * joy.axes[self.LEFT_JOY_HORIZONTAL]
+                self.ee_ff_cmd.twist.angular.y =  self.scale_ang * joy.axes[self.LEFT_JOY_VERTICAL]
+                self.ee_ff_cmd.twist.angular.x =  -self.scale_ang * joy.axes[self.LEFT_JOY_HORIZONTAL]
 
             # ---------- RIGHT STICK ----------
             # Z lineal
-            self.ee_ff_cmd.twist.linear.x = scale_lin * joy.axes[self.RIGHT_JOY_VERTICAL]
+            self.ee_ff_cmd.twist.linear.x = self.scale_lin * joy.axes[self.RIGHT_JOY_VERTICAL]
 
             # Yaw EE
-            self.ee_ff_cmd.twist.linear.y = -scale_ang * joy.axes[self.RIGHT_JOY_HORIZONTAL]
+            self.ee_ff_cmd.twist.linear.y = -self.scale_ang * joy.axes[self.RIGHT_JOY_HORIZONTAL]
             self.publish_current_ee_pose_as_target()
 
             # ---------- Activate an deactivate the nominal task ----------
-            deadband = 0.02
+            deadband = 0.05
 
             v_norm = abs(self.ee_ff_cmd.twist.linear.x) + \
                     abs(self.ee_ff_cmd.twist.linear.y) + \
@@ -407,7 +428,7 @@ class LogitechFX10Atlantis(JoystickBase):
 
                     try:
                         self.switch_tasks_srv(
-                            enable_tasks=['joint_positions'],
+                            enable_tasks=[self.joint_pos_task_name],
                             disable_tasks=[]
                         )
                     except rospy.ServiceException as e:
@@ -427,7 +448,7 @@ class LogitechFX10Atlantis(JoystickBase):
                     try:
                         self.switch_tasks_srv(
                             enable_tasks=[],
-                            disable_tasks=['joint_positions']
+                            disable_tasks=[self.joint_pos_task_name]
                         )
                     except rospy.ServiceException as e:
                         rospy.logwarn(f"Failed to disable joint_positions: {e}")
@@ -440,15 +461,15 @@ class LogitechFX10Atlantis(JoystickBase):
     def publish_current_ee_pose_as_target(self):
         try:
             T = self.tf_buffer.lookup_transform(
-                "world_ned",
-                "girona500/bravo/gripper/camera",
+                self.ik_world_frame,
+                self.ik_ee_frame,
                 rospy.Time(0),
                 rospy.Duration(0.05)
             )
 
             pose = PoseStamped()
             pose.header.stamp = rospy.Time.now()
-            pose.header.frame_id = "world_ned"
+            pose.header.frame_id = self.ik_world_frame
             pose.pose.position.x = T.transform.translation.x
             pose.pose.position.y = T.transform.translation.y
             pose.pose.position.z = T.transform.translation.z

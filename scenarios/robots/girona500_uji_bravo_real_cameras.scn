@@ -762,42 +762,50 @@
 		<actuator name="Servo1RB7" type="servo">
 			<joint name="bravo/joint1" />
 			<controller position_gain="1.0" velocity_gain="1.0" max_torque="100.0" />
+			<initial position="-1.57"/>
 
 		</actuator>
 
 		<actuator name="Servo2RB7" type="servo">
 			<joint name="bravo/joint2" />
 			<controller position_gain="1.0" velocity_gain="1.0" max_torque="100.0" />
+			<initial position="0.75"/>
 		</actuator>
 
 		<actuator name="Servo3RB7" type="servo">
 			<joint name="bravo/joint3" />
 			<controller position_gain="1.0" velocity_gain="1.0" max_torque="100.0" />
+			<initial position="-0.72"/>
 		</actuator>
 
 		<actuator name="Servo4RB7" type="servo">
 			<joint name="bravo/joint4" />
 			<controller position_gain="1.0" velocity_gain="1.0" max_torque="100.0" />
+			<initial position="-1.57"/>
 		</actuator>
 
 		<actuator name="Servo5RB7" type="servo">
 			<joint name="bravo/joint5" />
 			<controller position_gain="1.0" velocity_gain="1.0" max_torque="100.0" />
+			<initial position="-1.57"/>
 		</actuator>
 
 		<actuator name="Servo6RB7" type="servo">
 			<joint name="bravo/joint6" />
 			<controller position_gain="1.0" velocity_gain="1.0" max_torque="100.0" />
+			<initial position="1.56"/>
 		</actuator>
 
 		<actuator name="ServoFingerSmallRB7" type="servo">
 			<joint name="bravo/right_finger_joint" />
 			<controller position_gain="1.0" velocity_gain="1.0" max_torque="10000.0" />
+			<initial position="2.39"/>
 		</actuator>
 
 		<actuator name="ServoFingerLargeRB7" type="servo">
 			<joint name="bravo/left_finger_joint" />
 			<controller position_gain="1.0" velocity_gain="1.0" max_torque="10000.0" />
+			<initial position="-2.39"/>
 		</actuator>
 
 
