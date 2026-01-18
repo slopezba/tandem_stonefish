@@ -62,6 +62,8 @@ class LogitechFX10Atlantis(JoystickBase):
         """Class constructor."""
         JoystickBase.__init__(self, name)
         rospy.loginfo("%s: LogitechFX10 constructor", name)
+        self.req_enable_joint_pos = False
+        self.req_disable_joint_pos = False
 
         # To select mode of operation
         self.mode = 0
@@ -435,37 +437,22 @@ class LogitechFX10Atlantis(JoystickBase):
                     abs(self.ee_ff_cmd.twist.angular.z)
             if v_norm < deadband:
                 if not self.joint_pos_task_active:
-                    rospy.loginfo("[IK mode] Activating joint_positions task")
+                    rospy.loginfo("[IK mode] Request enable joint_positions")
 
-                    try:
-                        self.switch_tasks_srv(
-                            enable_tasks=[self.joint_pos_task_name],
-                            disable_tasks=[]
-                        )
-                    except rospy.ServiceException as e:
-                        rospy.logwarn(f"Failed to enable joint_positions: {e}")
-                        return
+                    self.req_enable_joint_pos = True
 
                     # Publicar target UNA VEZ
                     self.pub_joint_pos_target.publish(self.joint_pos_target)
 
                     self.joint_pos_task_active = True
-
             else:
                 # MOVIENDO → desactivar nominal
                 if self.joint_pos_task_active:
-                    rospy.loginfo("[IK mode] Disabling joint_positions task")
+                    rospy.loginfo("[IK mode] Request disable joint_positions")
 
-                    try:
-                        self.switch_tasks_srv(
-                            enable_tasks=[],
-                            disable_tasks=[self.joint_pos_task_name]
-                        )
-                    except rospy.ServiceException as e:
-                        rospy.logwarn(f"Failed to disable joint_positions: {e}")
-                        return
+                    self.req_disable_joint_pos = True
 
-                    self.joint_pos_task_active = False    
+                    self.joint_pos_task_active = False
 
         self.mutual_exclusion.release()
 
@@ -494,6 +481,7 @@ class LogitechFX10Atlantis(JoystickBase):
     def iterate(self, event):
         """ This method is a callback of a timer. This is used to publish the
             output joy message """
+        
         self.mutual_exclusion.acquire()
         # Publish message
         self.pub_map_ack_data.publish(self.joy_msg)
@@ -509,6 +497,42 @@ class LogitechFX10Atlantis(JoystickBase):
 
         self.mutual_exclusion.release()
         # Reset buttons
+        # ---------- Handle TP switch outside joystick callback ----------
+        if self.req_enable_joint_pos:
+
+            try:
+                rospy.wait_for_service('/tp_controller/switch_tasks', timeout=0.2)
+
+                self.switch_tasks_srv(
+                    enable_tasks=[self.joint_pos_task_name],
+                    disable_tasks=[]
+                )
+
+                rospy.loginfo("[IK mode] joint_positions enabled")
+
+            except (rospy.ServiceException, rospy.ROSException) as e:
+                rospy.logwarn_throttle(1.0, f"[IK mode] Enable failed: {e}")
+
+            self.req_enable_joint_pos = False
+
+
+        if self.req_disable_joint_pos:
+
+            try:
+                rospy.wait_for_service('/tp_controller/switch_tasks', timeout=0.2)
+
+                self.switch_tasks_srv(
+                    enable_tasks=[],
+                    disable_tasks=[self.joint_pos_task_name]
+                )
+
+                rospy.loginfo("[IK mode] joint_positions disabled")
+
+            except (rospy.ServiceException, rospy.ROSException) as e:
+                rospy.logwarn_throttle(1.0, f"[IK mode] Disable failed: {e}")
+
+            self.req_disable_joint_pos = False
+
 
     def get_config(self):
         """ Read parameters from ROS Param Server """
