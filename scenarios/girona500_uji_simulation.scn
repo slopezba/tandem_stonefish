@@ -5,6 +5,7 @@
 
 	<materials>
 		<material name="Neutral" density="1000.0" restitution="0.2" />
+		<material name="Net" density="100.0" restitution="0.05" />
 		<material name="Rock" density="3000.0" restitution="0.8" />
 		<material name="Fiberglass" density="1500.0" restitution="0.2" />
 		<material name="Aluminium" density="2710.0" restitution="0.5" />
@@ -44,7 +45,7 @@
 	<include file="$(find tandem_stonefish)/scenarios/environments/cirtesu_aruco.scn" />
 	
 
-	<include file="$(find tandem_stonefish)/scenarios/objects/net.scn">
+	<include file="$(find tandem_stonefish)/scenarios/objects/net_flexible.scn">
 		<arg name="name" value="net" />
 		<arg name="xyz" value="-6.0 -3.6 0.0" />
 		<arg name="rpy" value="0.0 0.0 0.0" />

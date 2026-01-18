@@ -288,7 +288,7 @@ class LogitechFX10Atlantis(JoystickBase):
                 rospy.loginfo("Switching to bravo ik controller")
                 self.mode = 3 #bravo ik mode (cartesian velocity)
                 rospy.ServiceProxy('/girona500/bravo/controller_manager/switch_controller', 
-                                   SwitchController)(['joint_velocity_controller','gripper_position_controller_finger_large', 'gripper_position_controller_finger_small'], ['joint_teleop_velocity_controller','joint_trajectory_controller', 'gripper_velocity_controller_finger_large', 'gripper_velocity_controller_finger_small'],
+                                   SwitchController)(['joint_velocity_controller','gripper_velocity_controller_finger_large', 'gripper_velocity_controller_finger_small'], ['joint_teleop_velocity_controller','joint_trajectory_controller', 'gripper_position_controller_finger_large', 'gripper_position_controller_finger_small'],
                                                       1, True, 0.0)
                 try:
                     rospy.wait_for_service('/girona500/tp_controller/active', timeout=1.0)
@@ -411,6 +411,17 @@ class LogitechFX10Atlantis(JoystickBase):
 
             # Yaw EE
             self.ee_ff_cmd.twist.linear.y = -self.scale_ang * joy.axes[self.RIGHT_JOY_HORIZONTAL]
+
+            # Open/Close gripper
+            # gripper_velocity = 0.004
+            gripper_velocity = 0.2
+            if joy.axes[self.RIGHT_TRIGGER] < 0.95:
+                self.bravoarm_gripper_cmd = (2.0 -(joy.axes[self.RIGHT_TRIGGER] + 1.0))*gripper_velocity
+            elif joy.axes[self.LEFT_TRIGGER] < 0.95:
+                self.bravoarm_gripper_cmd = -(2.0 -(joy.axes[self.LEFT_TRIGGER] + 1.0))*gripper_velocity
+            else:
+                self.bravoarm_gripper_cmd = 0.0
+            
             self.publish_current_ee_pose_as_target()
 
             # ---------- Activate an deactivate the nominal task ----------
@@ -493,6 +504,8 @@ class LogitechFX10Atlantis(JoystickBase):
             self.pub_bravoarm_desired_gripper_state_small.publish(self.bravoarm_gripper_cmd)
         if self.mode == 3:
             self.pub_bravo_ee_ff.publish(self.ee_ff_cmd)
+            self.pub_bravoarm_desired_gripper_state_large.publish(-self.bravoarm_gripper_cmd)
+            self.pub_bravoarm_desired_gripper_state_small.publish(self.bravoarm_gripper_cmd)
 
         self.mutual_exclusion.release()
         # Reset buttons

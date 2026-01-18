@@ -5,10 +5,6 @@
 	</looks>
 
 	<static name="$(arg name)" type="model">
-		<dynamic>
-			<!-- all standard definitions -->
-			<contact stiffness="50.0" damping="5.0"/>
-		</dynamic>
 		<physical>
 			<mesh filename="$(find tandem_stonefish)/resources/objects/net/net_just_plane_phy.obj"
 					scale="1.0" />

@@ -809,7 +809,7 @@
 		</actuator>
 
 
-		<world_transform rpy="0.0 0.0 0.0" xyz="$(arg start_position)" />
+		<world_transform rpy="0.0 0.0 -1.57" xyz="$(arg start_position)" />
 
 		<ros_control_interface namespace="/$(arg robot_name)/bravo" type="velocity" >
 			<joint name="bravo/joint1" />
